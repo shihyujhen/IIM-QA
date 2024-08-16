@@ -66,6 +66,20 @@ def GPT_response(text):
             print("Failed to download the file.")
     else:
         print("Index file already exists. Skipping download.")
+        print("有更新")
+    ############################################
+    
+    try:
+        file_size = os.path.getsize(local_index_path)
+        print(f"File size: {file_size} bytes")
+        print("有找到文件喔")
+    except OSError as e:
+        print(f"Failed to get the file size: {e}")
+        print("沒文件ㄟ哭死")
+
+
+
+    ##############################################
 
 
 
