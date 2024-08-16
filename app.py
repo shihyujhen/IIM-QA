@@ -23,7 +23,6 @@ from llama_index.core import Settings
 #======python的函數庫==========
 import tempfile, os
 import datetime
-import openai
 import time
 import traceback
 import pandas as pd
