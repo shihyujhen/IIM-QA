@@ -1,0 +1,9 @@
+line-bot-sdk
+flask
+openai < 1.0.0
+gunicorn
+llama-index
+google-generativeai
+pandas
+llama-index-llms-gemini
+llama-index-embeddings-huggingface
