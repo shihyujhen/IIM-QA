@@ -18,21 +18,31 @@ import pandas as pd
 import pickle
 import shutil
 import requests
+import psutil
 #======python的函數庫==========
 
+def print_memory_usage(message):
+    """打印当前内存使用量"""
+    process = psutil.Process(os.getpid())
+    mem_info = process.memory_info()
+    print(f"{message} - RSS: {mem_info.rss / (1024 ** 2):.2f} MB, VMS: {mem_info.vms / (1024 ** 2):.2f} MB")
 
 # OPENAI API Key初始化設定
 print("開始跑了")
+print_memory_usage("開始跑了")
 #openai.api_key = os.getenv('GEMINI_API_KEY')
 GOOGLE_API_KEY = "AIzaSyDHdddKwG41Ig3p5bVfIUQ2w-X6bOZI3gk"  #input API key
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 #embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-large-zh-v1.5")
 print("嵌入模型下載中")
+print_memory_usage("嵌入模型下載中")
 embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-zh-v1.5")
 csv_file_path = 'output1.csv'
 print("讀文件儲存於變量")
+print_memory_usage("讀文件儲存於變量")
 data = pd.read_csv(csv_file_path) #讀文件儲存於變量
-
+print("讀完文件")
+print_memory_usage("讀完文件")
 documents = []
 skipNUM = 0
 print("1")
