@@ -6,3 +6,4 @@ google-generativeai
 pandas
 llama-index-llms-gemini
 llama-index-embeddings-huggingface
+psutil
