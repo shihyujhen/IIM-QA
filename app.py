@@ -25,7 +25,8 @@ import requests
 #openai.api_key = os.getenv('GEMINI_API_KEY')
 GOOGLE_API_KEY = "AIzaSyDHdddKwG41Ig3p5bVfIUQ2w-X6bOZI3gk"  #input API key
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
-embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-large-zh-v1.5")
+#embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-large-zh-v1.5")
+embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-zh-v1.5")
 csv_file_path = 'output1.csv'
 data = pd.read_csv(csv_file_path) #讀文件儲存於變量
 
