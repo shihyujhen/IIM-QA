@@ -13,6 +13,18 @@ import google.generativeai as genai
 from langchain_huggingface import HuggingFaceEmbeddings
 print("非內建import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
+##################################
+
+import psutil
+
+def check_memory_usage():
+    process = psutil.Process(os.getpid())
+    mem_info = process.memory_info()
+    ram_usage_mb = mem_info.rss / (1024 ** 2)  # 将字节转换为MB
+    print(f"Current RAM usage: {ram_usage_mb:.2f} MB")
+    return ram_usage_mb
+#################################
+
 
 #======python的函數庫==========
 import tempfile
@@ -53,7 +65,7 @@ model = genai.GenerativeModel('gemini-pro')
 
 
 print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
-
+check_memory_usage()
 def GPT_response(query):
     print("已接收到訊息yaaaaaaaaaaaaaaaaaaaaaaaaa")
     '''
@@ -100,6 +112,7 @@ def GPT_response(query):
     response = model.generate_content(prompt)
     '''
     #return response.text
+    check_memory_usage()
     return query
 
 
