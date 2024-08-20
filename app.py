@@ -7,16 +7,6 @@ import google.generativeai as genai
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 
 
-uri = "mongodb+srv://h34106054:Alice0813@test0819.46rp0.mongodb.net/?retryWrites=true&w=majority&appName=test0819"
-client = MongoClient(uri, server_api=ServerApi('1'))
-dbName = "linebot"
-collectionName = "0819"
-collection = client[dbName][collectionName]
-
-embed_model = HuggingFaceEmbeddings(model_name="BAAI/bge-large-zh-v1.5")
-embedding_vector  = embed_model.embed_query("碩士入學申請?")
-
-
 print("非內建import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 
@@ -26,78 +16,42 @@ import datetime
 import time
 import traceback
 
-import shutil
-import requests
-import psutil
-
 import numpy as np
 import pandas as pd
 import os
 #======python的函數庫==========
 print("import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
+uri = "mongodb+srv://h34106054:Alice0813@test0819.46rp0.mongodb.net/?retryWrites=true&w=majority&appName=test0819"
+client = MongoClient(uri, server_api=ServerApi('1'))
+dbName = "linebot"
+collectionName = "0819"
+collection = client[dbName][collectionName]
 
-def print_memory_usage(message):
-    """打印当前内存使用量"""
-    process = psutil.Process(os.getpid())
-    mem_info = process.memory_info()
-    print(f"{message} - RSS: {mem_info.rss / (1024 ** 2):.2f} MB, VMS: {mem_info.vms / (1024 ** 2):.2f} MB")
+embed_model = HuggingFaceEmbeddings(model_name="BAAI/bge-large-zh-v1.5")
+embedding_vector  = embed_model.embed_query("碩士入學申請?")
 
-# OPENAI API Key初始化設定
-print("開始跑了")
-print_memory_usage("開始跑了")
-#openai.api_key = os.getenv('GEMINI_API_KEY')
-GOOGLE_API_KEY = "AIzaSyDHdddKwG41Ig3p5bVfIUQ2w-X6bOZI3gk"  #input API key
-os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
-#embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-large-zh-v1.5")
-print("嵌入模型下載中")
-print_memory_usage("嵌入模型下載中")
-embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-zh-v1.5")
-csv_file_path = 'output1.csv'
-print("讀文件儲存於變量")
-print_memory_usage("讀文件儲存於變量")
-data = pd.read_csv(csv_file_path) #讀文件儲存於變量
-print("讀完文件")
-print_memory_usage("讀完文件")
-documents = []
-skipNUM = 0
-print("1")
-for index, row in data.iterrows():
-    if pd.isna(row['title']): #跳過title空的行
-        print(f"Skipping row {index-skipNUM} due to empty 'title' field")
-        skipNUM += 1
-        continue
-    if pd.notna(row['title']):
-        content = (f"title: {row['title']}\n" f"detail: {row['detail']}")
+print("embedding_vector 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
-        #print(f"Content for row {index-skipNUM}: {content}")
-        #改!
-        documents.append(Document(id=str(index-skipNUM),text=content))# 索引作为ID       # 將detail的東西存入
-    else:
-        print(f"Skipping row {index-skipNUM} due to missing data in other fields")
 
-if not documents:
-    raise ValueError("No valid documents found. Ensure your CSV file has content.")
 
-index = VectorStoreIndex.from_documents(documents, embed_model=embed_model)
-print("index轉換完成")
 def GPT_response(text):
     # 改接收回應
     
-    print("2")
-    Settings.llm = Gemini()
-    retriever = VectorIndexRetriever(index=index,similarity_top_k=3,)
-    response_synthesizer = get_response_synthesizer(response_mode="tree_summarize", llm=Gemini())
-    query_engine = RetrieverQueryEngine(retriever=retriever,response_synthesizer=response_synthesizer)
-    response=query_engine.query(text)
+    #print("2")
+    #Settings.llm = Gemini()
+    #retriever = VectorIndexRetriever(index=index,similarity_top_k=3,)
+    #response_synthesizer = get_response_synthesizer(response_mode="tree_summarize", llm=Gemini())
+    #query_engine = RetrieverQueryEngine(retriever=retriever,response_synthesizer=response_synthesizer)
+    #response=query_engine.query(text)
     #############
 
     #response = openai.Completion.create(model="gpt-3.5-turbo-instruct", prompt=text, temperature=0.5, max_tokens=500)
-    print(response)
+    #print(response)
     # 重組回應
-    print("3")
-    answer = response['choices'][0]['text'].replace('。','')
-    return answer
+    #print("3")
+    #answer = response['choices'][0]['text'].replace('。','')
+    return text
 
 
 # 監聽所有來自 /callback 的 Post Request
