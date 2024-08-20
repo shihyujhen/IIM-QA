@@ -19,7 +19,6 @@ import tempfile
 import datetime
 import time
 import traceback
-import request
 import numpy as np
 import pandas as pd
 import os
@@ -48,8 +47,8 @@ handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 ######################################################################
 #google and llm setting
 
-GOOGLE_API_KEY="AIzaSyDUuA4pHGNTWyUWp2xK63ifGwUgv0x43ho"
-genai.configure(api_key = GOOGLE_API_KEY)
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
 
@@ -57,6 +56,7 @@ print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 def GPT_response(query):
     print("已接收到訊息yaaaaaaaaaaaaaaaaaaaaaaaaa")
+    '''
     #############
     embedding_vector  = embed_model.embed_query(query)
     pipeline = [
@@ -98,7 +98,7 @@ def GPT_response(query):
     prompt = f"查詢: {query}\n回答提示: {detail}\n請根據以上信息使用繁體中文回答。"
     print("準備丟入LLMyaaaaaaaaaaaaaaaaaaaaaaaaa")
     response = model.generate_content(prompt)
-    
+    '''
     #return response.text
     return query
 
