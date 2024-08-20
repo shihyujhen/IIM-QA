@@ -1,25 +1,41 @@
 # -*- coding: utf-8 -*-
 #new1227
+from pymongo import MongoClient
+from pymongo.server_api import ServerApi
+
+import google.generativeai as genai
+from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 
 
-from llama_index.llms.gemini import Gemini
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.core import VectorStoreIndex, Document
-from llama_index.core import VectorStoreIndex, get_response_synthesizer
-from llama_index.core.retrievers import VectorIndexRetriever
-from llama_index.core.query_engine import RetrieverQueryEngine
-from llama_index.core import Settings
+uri = "mongodb+srv://h34106054:Alice0813@test0819.46rp0.mongodb.net/?retryWrites=true&w=majority&appName=test0819"
+client = MongoClient(uri, server_api=ServerApi('1'))
+dbName = "linebot"
+collectionName = "0819"
+collection = client[dbName][collectionName]
+
+embed_model = HuggingFaceEmbeddings(model_name="BAAI/bge-large-zh-v1.5")
+embedding_vector  = embed_model.embed_query("碩士入學申請?")
+
+
+print("非內建import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+
 #======python的函數庫==========
-import tempfile, os
+import tempfile
 import datetime
 import time
 import traceback
-import pandas as pd
-import pickle
+
 import shutil
 import requests
 import psutil
+
+import numpy as np
+import pandas as pd
+import os
 #======python的函數庫==========
+print("import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
+
 
 def print_memory_usage(message):
     """打印当前内存使用量"""
