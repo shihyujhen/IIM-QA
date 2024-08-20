@@ -33,6 +33,12 @@ embedding_vector  = embed_model.embed_query("碩士入學申請?")
 
 print("embedding_vector 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
+app = Flask(__name__)
+static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+# Channel Access Token
+line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
+# Channel Secret
+handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 
 
 def GPT_response(text):
