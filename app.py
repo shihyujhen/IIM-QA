@@ -40,7 +40,7 @@ embed_model = HuggingFaceEmbeddings(model_name="BAAI/bge-large-zh-v1.5")
 print("embedding_vector 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 app = Flask(__name__)
-static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+#static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 # Channel Access Token
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
