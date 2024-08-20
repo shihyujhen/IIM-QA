@@ -31,10 +31,7 @@ client = MongoClient(uri, server_api=ServerApi('1'))
 dbName = "linebot"
 collectionName = "0819"
 collection = client[dbName][collectionName]
-
 embed_model = HuggingFaceEmbeddings(model_name="BAAI/bge-large-zh-v1.5")
-embedding_vector  = embed_model.embed_query("碩士入學申請?")
-
 print("embedding_vector 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 app = Flask(__name__)
@@ -43,26 +40,59 @@ static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
+######################################################################
+#google and llm setting
+
+GOOGLE_API_KEY="AIzaSyDUuA4pHGNTWyUWp2xK63ifGwUgv0x43ho"
+genai.configure(api_key = GOOGLE_API_KEY)
+model = genai.GenerativeModel('gemini-pro')
+
 
 print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
-def GPT_response(text):
-    # 改接收回應
+def GPT_response(query):
     
-    #print("2")
-    #Settings.llm = Gemini()
-    #retriever = VectorIndexRetriever(index=index,similarity_top_k=3,)
-    #response_synthesizer = get_response_synthesizer(response_mode="tree_summarize", llm=Gemini())
-    #query_engine = RetrieverQueryEngine(retriever=retriever,response_synthesizer=response_synthesizer)
-    #response=query_engine.query(text)
     #############
+    embedding_vector  = embed_model.embed_query(query)
+    pipeline = [
+        {
+            "$vectorSearch": {
+                "index": "vector_index",  # 替换为您的索引名称
+                "path": "embedding",       # 替换为您的字段名称
+                "queryVector": embedding_vector,  # 替换为您的查询向量
+                "numCandidates": 100,  # 设置候选项数量
+                "limit": 1  # 设置结果限制
+            }}]
+    
+    try:
+        results = list(collection.aggregate(pipeline))
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        ErrorMessage="我不太清楚，An error occurred."
+        return ErrorMessage
+    
+    # 提取 detail 部分
+    for doc in results:
+        text = doc.get('text', '')
+        # 找到 detail 的起始位置
+        start_index = text.find('detail: ')
+        if start_index != -1:
+            # 提取 detail 部分
+            detail = text[start_index + len('detail: '):]
+            # 找到详细信息的结束位置（通常是下一行的开始位置）
+            end_index = detail.find('\n')
+            if end_index != -1:
+                detail = detail[:end_index].strip()
+            #print(f"Detail: {detail}")
+        else:
+            print("Detail not found")
+    
+        
 
-    #response = openai.Completion.create(model="gpt-3.5-turbo-instruct", prompt=text, temperature=0.5, max_tokens=500)
-    #print(response)
-    # 重組回應
-    #print("3")
-    #answer = response['choices'][0]['text'].replace('。','')
-    return text
+    ##############
+    prompt = f"查詢: {query}\n回答提示: {detail}\n請根據以上信息使用繁體中文回答。"
+    response = model.generate_content(prompt)
+    return response.text
 
 
 # 監聽所有來自 /callback 的 Post Request
