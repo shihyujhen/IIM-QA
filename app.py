@@ -31,6 +31,11 @@ client = MongoClient(uri, server_api=ServerApi('1'))
 dbName = "linebot"
 collectionName = "0819"
 collection = client[dbName][collectionName]
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 embed_model = HuggingFaceEmbeddings(model_name="BAAI/bge-large-zh-v1.5")
 print("embedding_vector 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
