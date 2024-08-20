@@ -51,7 +51,7 @@ model = genai.GenerativeModel('gemini-pro')
 print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 def GPT_response(query):
-    
+    print("已接收到訊息yaaaaaaaaaaaaaaaaaaaaaaaaa")
     #############
     embedding_vector  = embed_model.embed_query(query)
     pipeline = [
@@ -70,7 +70,7 @@ def GPT_response(query):
         print(f"An error occurred: {e}")
         ErrorMessage="我不太清楚，An error occurred."
         return ErrorMessage
-    
+    print("有收到訊息並查詢完yaaaaaaaaaaaaaaaaaaaaaaaaa")
     # 提取 detail 部分
     for doc in results:
         text = doc.get('text', '')
@@ -86,12 +86,14 @@ def GPT_response(query):
             #print(f"Detail: {detail}")
         else:
             print("Detail not found")
-    
+    print("提取提示細節完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
         
 
     ##############
     prompt = f"查詢: {query}\n回答提示: {detail}\n請根據以上信息使用繁體中文回答。"
+    print("準備丟入LLMyaaaaaaaaaaaaaaaaaaaaaaaaa")
     response = model.generate_content(prompt)
+    
     return response.text
 
 
