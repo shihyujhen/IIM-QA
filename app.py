@@ -4,7 +4,8 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 
 import google.generativeai as genai
-from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+#from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 
 print("非內建import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
