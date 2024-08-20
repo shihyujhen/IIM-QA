@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 #new1227
+from flask import Flask, request, abort
+from linebot import (LineBotApi, WebhookHandler)
+from linebot.exceptions import (InvalidSignatureError)
+from linebot.models import *
+print("line東西完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
+
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
-
 import google.generativeai as genai
 #from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain_huggingface import HuggingFaceEmbeddings
-
-
 print("非內建import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 
@@ -41,6 +44,7 @@ line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 
+print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 def GPT_response(text):
     # 改接收回應
