@@ -1,9 +1,12 @@
 line-bot-sdk
 flask
 gunicorn
-llama-index
 google-generativeai
 pandas
-llama-index-llms-gemini
-llama-index-embeddings-huggingface
-psutil
+pymongo[srv]
+langchain
+huggingface-hub
+langchain-community
+sentence-transformers
+numpy
+
