@@ -10,5 +10,5 @@ langchain-community
 sentence-transformers
 numpy
 langchain-huggingface
-
+psutil
 
