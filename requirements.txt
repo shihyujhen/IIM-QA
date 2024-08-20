@@ -5,8 +5,10 @@ google-generativeai
 pandas
 pymongo[srv]
 langchain
-huggingface-hub
+
 langchain-community
 sentence-transformers
 numpy
+langchain-huggingface
+
 
