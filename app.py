@@ -29,14 +29,14 @@ print("import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 uri = "mongodb+srv://h34106054:Alice0813@test0819.46rp0.mongodb.net/?retryWrites=true&w=majority&appName=test0819"
 client = MongoClient(uri, server_api=ServerApi('1'))
 dbName = "linebot"
-collectionName = "0819"
+collectionName = "0819-small"
 collection = client[dbName][collectionName]
 try:
     client.admin.command('ping')
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     print(e)
-embed_model = HuggingFaceEmbeddings(model_name="BAAI/bge-large-zh-v1.5")
+embed_model = HuggingFaceEmbeddings(model_name="BAAI/bge-small-zh-v1.5")
 print("embedding_vector 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 app = Flask(__name__)
@@ -99,7 +99,8 @@ def GPT_response(query):
     print("準備丟入LLMyaaaaaaaaaaaaaaaaaaaaaaaaa")
     response = model.generate_content(prompt)
     
-    return response.text
+    #return response.text
+    return query
 
 
 # 監聽所有來自 /callback 的 Post Request
