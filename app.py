@@ -73,12 +73,12 @@ def query(payload):
 print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
 check_memory_usage()
 
-def GPT_response(query):
+def GPT_response(question):
     print("已接收到訊息yaaaaaaaaaaaaaaaaaaaaaaaaa")
     
     #############
     
-    texts = [query]
+    texts = [question]
     output = query({"inputs": texts,})
     print("API Response:", output)
     embedding_vector = output[0][0][0]
@@ -136,6 +136,7 @@ def GPT_response(query):
     check_memory_usage()
     print("要印出了yaaaaaaaaaaaaaaaaaaaaaaaaa")
     print(prompt)
+    print(response)
     return prompt
 
 
