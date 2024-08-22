@@ -68,9 +68,12 @@ print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
 check_memory_usage()
 def GPT_response(query):
     print("已接收到訊息yaaaaaaaaaaaaaaaaaaaaaaaaa")
-    '''
+    
     #############
+    
     embedding_vector  = embed_model.embed_query(query)
+    print("嵌入完yaaaaaaaaaaaaaaaaaaaaaaaaa")
+    check_memory_usage()
     pipeline = [
         {
             "$vectorSearch": {
@@ -80,14 +83,18 @@ def GPT_response(query):
                 "numCandidates": 100,  # 设置候选项数量
                 "limit": 1  # 设置结果限制
             }}]
-    
+    print("pipeline完yaaaaaaaaaaaaaaaaaaaaaaaaa")
+    check_memory_usage()
     try:
         results = list(collection.aggregate(pipeline))
+        print("collection完yaaaaaaaaaaaaaaaaaaaaaaaaa")
+        check_memory_usage()
     except Exception as e:
         print(f"An error occurred: {e}")
         ErrorMessage="我不太清楚，An error occurred."
         return ErrorMessage
     print("有收到訊息並查詢完yaaaaaaaaaaaaaaaaaaaaaaaaa")
+    '''
     # 提取 detail 部分
     for doc in results:
         text = doc.get('text', '')
