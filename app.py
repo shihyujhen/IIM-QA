@@ -63,7 +63,8 @@ model = genai.GenerativeModel('gemini-pro')
 ############################################################################
 #huggingface api
 API_URL = "https://api-inference.huggingface.co/models/BAAI/bge-small-zh-v1.5"
-headers = {"Authorization": "Bearer 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"}
+HUGGING_FACE_API = os.getenv("HUGGING_FACE_API")
+headers = {"Authorization": f"Bearer {HUGGING_FACE_API}"}
 def query(payload):
     response = requests.post(API_URL, headers=headers, json=payload)
     return response.json()
@@ -128,7 +129,7 @@ def GPT_response(question):
         
 
     ##############
-    prompt = f"查詢: {question}\n回答提示: {detail}\n請根據以上信息使用繁體中文回答。"
+    prompt = f"查詢: {question}\n回答提示: {detail}\n你是協助回答問題的助手，請根據以上信息使用繁體中文"活潑親切"的回答。"
     print("準備丟入LLMyaaaaaaaaaaaaaaaaaaaaaaaaa")
     response = model.generate_content(prompt)
     
@@ -136,8 +137,8 @@ def GPT_response(question):
     check_memory_usage()
     print("要印出了yaaaaaaaaaaaaaaaaaaaaaaaaa")
     print(prompt)
-    print(response)
-    return prompt
+    #print(response)
+    return response.text
 
 
 # 監聽所有來自 /callback 的 Post Request
@@ -168,7 +169,7 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, TextSendMessage(GPT_answer))
     except:
         print(traceback.format_exc())
-        line_bot_api.reply_message(event.reply_token, TextSendMessage('API keyQQQQQQQQQQQQQQQQQQQQ'))
+        line_bot_api.reply_message(event.reply_token, TextSendMessage('系統正在忙碌幫您找資料中，請耐心等待喔'))
 
 
 @handler.add(PostbackEvent)
