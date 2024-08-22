@@ -34,6 +34,7 @@ import traceback
 import numpy as np
 import pandas as pd
 import os
+import requests
 #======python的函數庫==========
 print("import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
@@ -47,22 +48,25 @@ try:
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     print(e)
-embed_model = HuggingFaceEmbeddings(model_name="BAAI/bge-small-zh-v1.5")
-print("embedding_vector 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 app = Flask(__name__)
 #static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-# Channel Access Token
+
+
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
-# Channel Secret
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 ######################################################################
 #google and llm setting
-
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
+############################################################################
+#huggingface api
+API_URL = "https://api-inference.huggingface.co/models/BAAI/bge-small-zh-v1.5"
+headers = {"Authorization": "Bearer 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"}
+
+################################################################################
 
 print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
 check_memory_usage()
