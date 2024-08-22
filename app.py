@@ -128,7 +128,7 @@ def GPT_response(question):
         
 
     ##############
-    prompt = f"查詢: {query}\n回答提示: {detail}\n請根據以上信息使用繁體中文回答。"
+    prompt = f"查詢: {question}\n回答提示: {detail}\n請根據以上信息使用繁體中文回答。"
     print("準備丟入LLMyaaaaaaaaaaaaaaaaaaaaaaaaa")
     response = model.generate_content(prompt)
     
