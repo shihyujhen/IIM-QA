@@ -6,10 +6,9 @@ google-generativeai
 pandas
 pymongo[srv]
 
-
+requests
 langchain-community
 sentence-transformers
 numpy
-langchain-huggingface
 psutil
 
