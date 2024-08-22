@@ -129,7 +129,7 @@ def GPT_response(question):
         
 
     ##############
-    prompt = f"查詢: {question}\n回答提示: {detail}\n你是協助回答問題的助手，請根據以上信息使用繁體中文"活潑親切"的回答。"
+    prompt = f"查詢: {question}\n回答提示: {detail}\n你是協助回答問題的助手，請根據以上信息使用繁體中文\"活潑親切\"的回答。"
     print("準備丟入LLMyaaaaaaaaaaaaaaaaaaaaaaaaa")
     response = model.generate_content(prompt)
     
