@@ -169,7 +169,12 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, TextSendMessage(GPT_answer))
     except:
         print(traceback.format_exc())
-        line_bot_api.reply_message(event.reply_token, TextSendMessage('系統正在忙碌幫您找資料中，請耐心等待喔'))
+        #line_bot_api.reply_message(event.reply_token, TextSendMessage('系統正在忙碌幫您找資料中，請耐心等待喔'))
+        #print(traceback.format_exc())
+        
+        GPT_answer = None  
+        del msg  
+        line_bot_api.reply_message(event.reply_token, TextSendMessage('已啟動 請重新輸入'))
 
 
 @handler.add(PostbackEvent)
