@@ -65,17 +65,28 @@ model = genai.GenerativeModel('gemini-pro')
 #huggingface api
 API_URL = "https://api-inference.huggingface.co/models/BAAI/bge-small-zh-v1.5"
 headers = {"Authorization": "Bearer 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"}
+def query(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
 
 ################################################################################
 
 print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
 check_memory_usage()
+
 def GPT_response(query):
     print("已接收到訊息yaaaaaaaaaaaaaaaaaaaaaaaaa")
     
     #############
     
-    embedding_vector  = embed_model.embed_query(query)
+    texts = [query]
+    output = query({"inputs": texts,})
+    print("API Response:", output)
+    embedding_vector = output[0][0][0]
+    print(embedding_vector)
+    check_memory_usage()
+        
+    
     print("嵌入完yaaaaaaaaaaaaaaaaaaaaaaaaa")
     check_memory_usage()
     pipeline = [
@@ -98,7 +109,7 @@ def GPT_response(query):
         ErrorMessage="我不太清楚，An error occurred."
         return ErrorMessage
     print("有收到訊息並查詢完yaaaaaaaaaaaaaaaaaaaaaaaaa")
-    '''
+    
     # 提取 detail 部分
     for doc in results:
         text = doc.get('text', '')
@@ -121,11 +132,12 @@ def GPT_response(query):
     prompt = f"查詢: {query}\n回答提示: {detail}\n請根據以上信息使用繁體中文回答。"
     print("準備丟入LLMyaaaaaaaaaaaaaaaaaaaaaaaaa")
     response = model.generate_content(prompt)
-    '''
+    
     #return response.text
     check_memory_usage()
     print("要印出了yaaaaaaaaaaaaaaaaaaaaaaaaa")
-    return query
+    print(prompt)
+    return prompt
 
 
 # 監聽所有來自 /callback 的 Post Request
