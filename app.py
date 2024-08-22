@@ -80,7 +80,7 @@ def GPT_response(query):
                 "index": "vector_index",  # 替换为您的索引名称
                 "path": "embedding",       # 替换为您的字段名称
                 "queryVector": embedding_vector,  # 替换为您的查询向量
-                "numCandidates": 100,  # 设置候选项数量
+                "numCandidates": 1,  # 设置候选项数量
                 "limit": 1  # 设置结果限制
             }}]
     print("pipeline完yaaaaaaaaaaaaaaaaaaaaaaaaa")
@@ -120,6 +120,7 @@ def GPT_response(query):
     '''
     #return response.text
     check_memory_usage()
+    print("要印出了yaaaaaaaaaaaaaaaaaaaaaaaaa")
     return query
 
 
