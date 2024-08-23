@@ -4,6 +4,8 @@ from flask import Flask, request, abort
 from linebot import (LineBotApi, WebhookHandler)
 from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import *
+from linebot.exceptions import LineBotApiError
+from linebot.models import TextSendMessage
 print("line東西完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 from pymongo import MongoClient
@@ -163,6 +165,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = event.message.text
+    user_id = event.source.user_id   # 获取用户的 user_id
     try:
         GPT_answer = GPT_response(msg)
         print(GPT_answer)
@@ -173,9 +176,10 @@ def handle_message(event):
         #print(traceback.format_exc())
         
         GPT_answer = None  
-        del msg  
-        line_bot_api.reply_message(event.reply_token, TextSendMessage('已啟動 請重新輸入'))
-
+        #del msg  
+        #line_bot_api.reply_message(event.reply_token, TextSendMessage('已啟動 請重新輸入'))
+        line_bot_api.push_message(user_id, TextSendMessage(text="系统忙碌，请稍后再试。"))
+                
 
 @handler.add(PostbackEvent)
 def handle_message(event):
