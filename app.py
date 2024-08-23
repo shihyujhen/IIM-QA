@@ -165,7 +165,9 @@ processed_events = set()
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.id in processed_events: 
-        return processed_events.add(event.message.id)
+        print("出事了阿北")
+        return 
+    processed_events.add(event.message.id)
     msg = event.message.text
     user_id = event.source.user_id   # 获取用户的 user_id
     
