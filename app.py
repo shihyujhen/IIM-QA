@@ -170,7 +170,7 @@ def handle_message(event):
     processed_events.add(event.message.id)
     msg = event.message.text
     user_id = event.source.user_id   # 获取用户的 user_id
-    
+    '''
     try:
         GPT_answer = GPT_response(msg)
         print(GPT_answer)
@@ -184,6 +184,24 @@ def handle_message(event):
         #del msg  
         #line_bot_api.reply_message(event.reply_token, TextSendMessage('已啟動 請重新輸入'))
         line_bot_api.push_message(user_id, TextSendMessage(text="系统忙碌，请稍后再试。"))
+    '''
+    try:
+        GPT_answer = GPT_response(msg)
+        print(GPT_answer)
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(GPT_answer))
+    except requests.exceptions.Timeout:
+        # 处理请求超时异常
+        print("请求超时。")
+        line_bot_api.push_message(user_id, TextSendMessage(text="请求超时，请稍后再试。"))
+    except LineBotApiError as e:
+        # 处理 Line Bot API 错误
+        print(f"LineBotApiError: {e}")
+        line_bot_api.push_message(user_id, TextSendMessage(text="系统忙碌，请稍后再试。"))
+    except Exception as e:
+        # 处理其他异常
+        print(traceback.format_exc())
+        line_bot_api.push_message(user_id, TextSendMessage(text="系统发生了错误，请稍后再试。"))
+
                 
 
 @handler.add(PostbackEvent)
