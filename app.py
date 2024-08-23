@@ -83,7 +83,7 @@ def GPT_response(question):
     
     texts = [question]
     output = query({"inputs": texts,})
-    print("API Response:", output)
+    #print("API Response:", output)
     embedding_vector = output[0][0][0]
     print(embedding_vector)
     check_memory_usage()
@@ -160,12 +160,15 @@ def callback():
         abort(400)
     return 'OK'
 
-
+processed_events = set()
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    if event.message.id in processed_events: 
+        return processed_events.add(event.message.id)
     msg = event.message.text
     user_id = event.source.user_id   # 获取用户的 user_id
+    
     try:
         GPT_answer = GPT_response(msg)
         print(GPT_answer)
@@ -175,7 +178,7 @@ def handle_message(event):
         #line_bot_api.reply_message(event.reply_token, TextSendMessage('系統正在忙碌幫您找資料中，請耐心等待喔'))
         #print(traceback.format_exc())
         
-        GPT_answer = None  
+        #GPT_answer = None  
         #del msg  
         #line_bot_api.reply_message(event.reply_token, TextSendMessage('已啟動 請重新輸入'))
         line_bot_api.push_message(user_id, TextSendMessage(text="系统忙碌，请稍后再试。"))
