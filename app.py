@@ -102,7 +102,7 @@ def GPT_response(question):
     
     try:
         embedding_vector = output[0][0][0]
-        print(embedding_vector)
+        #print(embedding_vector)
         check_memory_usage()
     except (KeyError, IndexError) as e:
         print(f"解析嵌入向量时出错: {e}, 输出内容: {output}")
