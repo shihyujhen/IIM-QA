@@ -84,7 +84,7 @@ def GPT_response(question):
     texts = [question]
     
     # 尝试
-    max_retries = 3
+    max_retries = 5
     retries = 0
     output = None
 
@@ -94,11 +94,11 @@ def GPT_response(question):
             break
         retries += 1
         print(f"模型未完全加载，重试第 {retries} 次...")
-        time.sleep(3)  # 等待2秒再重试
+        time.sleep(4)  # 等待2秒再重试
     
     if not output or not isinstance(output, list):
         print(f"API 返回的输出不正确: {output}")
-        return "API 返回错误，请稍后再试。"
+        return "因為剛啟動模型載入較久，請重新輸入問題喔!"
     
     try:
         embedding_vector = output[0][0][0]
@@ -127,7 +127,7 @@ def GPT_response(question):
                 "index": "vector_index",  # 替换为您的索引名称
                 "path": "embedding",       # 替换为您的字段名称
                 "queryVector": embedding_vector,  # 替换为您的查询向量
-                "numCandidates": 1,  # 设置候选项数量
+                "numCandidates": 5,  # 设置候选项数量
                 "limit": 1  # 设置结果限制
             }}]
     print("pipeline完yaaaaaaaaaaaaaaaaaaaaaaaaa")
@@ -145,6 +145,7 @@ def GPT_response(question):
     # 提取 detail 部分
     for doc in results:
         text = doc.get('text', '')
+        '''
         # 找到 detail 的起始位置
         start_index = text.find('detail: ')
         if start_index != -1:
@@ -157,6 +158,9 @@ def GPT_response(question):
             #print(f"Detail: {detail}")
         else:
             print("Detail not found")
+        '''
+        detail = text.strip()
+        print(f"Detail: {detail}")
     print("提取提示細節完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
         
 
