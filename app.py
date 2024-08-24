@@ -82,12 +82,42 @@ def GPT_response(question):
     #############
     
     texts = [question]
+    
+    # 尝试
+    max_retries = 3
+    retries = 0
+    output = None
+
+    while retries < max_retries:
+        output = query({"inputs": texts})
+        if output and isinstance(output, list) and output[0]:
+            break
+        retries += 1
+        print(f"模型未完全加载，重试第 {retries} 次...")
+        time.sleep(3)  # 等待2秒再重试
+    
+    if not output or not isinstance(output, list):
+        print(f"API 返回的输出不正确: {output}")
+        return "API 返回错误，请稍后再试。"
+    
+    try:
+        embedding_vector = output[0][0][0]
+        print(embedding_vector)
+        check_memory_usage()
+    except (KeyError, IndexError) as e:
+        print(f"解析嵌入向量时出错: {e}, 输出内容: {output}")
+        return "获取嵌入向量时出错，请稍后再试。"
+    
+    
+    
+    '''
     output = query({"inputs": texts,})
     #print("API Response:", output)
     embedding_vector = output[0][0][0]
-    print(embedding_vector)
-    check_memory_usage()
-        
+    #print(embedding_vector)
+    '''
+
+
     
     print("嵌入完yaaaaaaaaaaaaaaaaaaaaaaaaa")
     check_memory_usage()
@@ -131,7 +161,7 @@ def GPT_response(question):
         
 
     ##############
-    prompt = f"查詢: {question}\n回答提示: {detail}\n你是協助回答問題的助手，請根據以上信息使用繁體中文\"活潑親切\"的回答。"
+    prompt = f"查詢: {question}\n回答提示: {detail}\n你是協助回答問題的助手，請根據以上信息使用繁體中文\"活潑親切\"的回答。(適當加一些EMOJI)"
     print("準備丟入LLMyaaaaaaaaaaaaaaaaaaaaaaaaa")
     response = model.generate_content(prompt)
     
@@ -181,7 +211,7 @@ def handle_message(event):
         #print(traceback.format_exc())
         
         #GPT_answer = None  
-        #del msg  
+
         #line_bot_api.reply_message(event.reply_token, TextSendMessage('已啟動 請重新輸入'))
         line_bot_api.push_message(user_id, TextSendMessage(text="系统忙碌，请稍后再试。"))
     '''
@@ -196,7 +226,7 @@ def handle_message(event):
     except LineBotApiError as e:
         # 处理 Line Bot API 错误
         print(f"LineBotApiError: {e}")
-        line_bot_api.push_message(user_id, TextSendMessage(text="系统忙碌，请稍后再试。"))
+        line_bot_api.push_message(user_id, TextSendMessage(text="系統剛開啟 請重新輸入。"))
     except Exception as e:
         # 处理其他异常
         print(traceback.format_exc())
