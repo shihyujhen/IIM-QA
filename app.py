@@ -64,7 +64,7 @@ model = genai.GenerativeModel('gemini-pro')
 
 ############################################################################
 #huggingface api
-API_URL = "https://api-inference.huggingface.co/models/BAAI/bge-small-zh-v1.5"
+API_URL = "https://router.huggingface.co/hf-inference/models/BAAI/bge-small-zh-v1.5"
 HUGGING_FACE_API = os.getenv("HUGGING_FACE_API")
 headers = {"Authorization": f"Bearer {HUGGING_FACE_API}"}
 def query(payload):
