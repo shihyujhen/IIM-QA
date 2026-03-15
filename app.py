@@ -100,24 +100,32 @@ def GPT_response(question):
         # 1. 取得原始輸出
         raw_vector = output
         
-        # 2. 強制解析為單層 List
-        # 如果 output 是 [[...]]，取第一個元素
-        if isinstance(raw_vector, list) and len(raw_vector) > 0:
-            if isinstance(raw_vector[0], list):
-                embedding_vector = raw_vector[0]
-            else:
-                embedding_vector = raw_vector
+        # 2. 強制攤平 (不管它是幾層 list，都剝到只剩一層)
+        def flatten(lst):
+            for item in lst:
+                if isinstance(item, list):
+                    yield from flatten(item)
+                else:
+                    yield item
+
+        if isinstance(raw_vector, list):
+            # 轉換成單層 list 並確保內容是 float
+            embedding_vector = [float(x) for x in flatten(raw_vector)]
         else:
             print(f"無法解析的向量格式: {raw_vector}")
             return "向量格式錯誤"
 
-        # 3. 額外檢查：確保裡面的元素是浮點數，不是字串或其他東西
-        embedding_vector = [float(x) for x in embedding_vector]
-        print(f"成功取得向量，維度為: {len(embedding_vector)}")
+        # 3. 檢查維度 (bge-small 應該是 512)
+        print(f"✅ 成功取得向量，最終維度為: {len(embedding_vector)}")
         
+        # 如果維度是 0，代表解析失敗
+        if len(embedding_vector) == 0:
+            return "解析出的向量為空"
+            
     except Exception as e:
-        print(f"處理向量時發生錯誤: {e}")
+        print(f"解析過程中發生錯誤: {e}, 原始輸出: {output}")
         return "處理向量失敗"
+        
         
     #暫時刪除0315
     '''
