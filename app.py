@@ -97,34 +97,28 @@ def GPT_response(question):
     
     #new added 0315
     try:
-        # 1. 取得原始輸出
-        raw_vector = output
-        
-        # 2. 強制攤平 (不管它是幾層 list，都剝到只剩一層)
-        def flatten(lst):
-            for item in lst:
-                if isinstance(item, list):
-                    yield from flatten(item)
-                else:
-                    yield item
+        # 定義一個遞迴函數，不管幾層 list 都能把數字掏出來
+        def flatten(item):
+            res = []
+            if isinstance(item, list):
+                for i in item:
+                    res.extend(flatten(i))
+            else:
+                res.append(item)
+            return res
 
-        if isinstance(raw_vector, list):
-            # 轉換成單層 list 並確保內容是 float
-            embedding_vector = [float(x) for x in flatten(raw_vector)]
-        else:
-            print(f"無法解析的向量格式: {raw_vector}")
-            return "向量格式錯誤"
-
-        # 3. 檢查維度 (bge-small 應該是 512)
-        print(f"✅ 成功取得向量，最終維度為: {len(embedding_vector)}")
+        # 1. 取得攤平後的結果
+        flat_list = flatten(output)
         
-        # 如果維度是 0，代表解析失敗
-        if len(embedding_vector) == 0:
-            return "解析出的向量為空"
-            
+        # 2. 轉換成 float 格式（這時裡面保證不是 list 了）
+        embedding_vector = [float(x) for x in flat_list]
+        
+        print(f"✅ 解析成功！維度為: {len(embedding_vector)}")
+        
     except Exception as e:
-        print(f"解析過程中發生錯誤: {e}, 原始輸出: {output}")
-        return "處理向量失敗"
+        print(f"解析失敗，原因: {e}")
+        print(f"原始 output 內容方便你 Debug: {output}")
+        return "向量解析失敗"
         
         
     #暫時刪除0315
