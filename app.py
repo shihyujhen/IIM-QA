@@ -44,12 +44,14 @@ client = MongoClient(uri, server_api=ServerApi('1'))
 dbName = "linebot"
 collectionName = "0819-small"
 collection = client[dbName][collectionName]
+#20260315暫刪
+'''
 try:
     client.admin.command('ping')
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
     print(e)
-
+'''
 app = Flask(__name__)
 #static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
@@ -238,5 +240,11 @@ def welcome(event):
     line_bot_api.reply_message(event.reply_token, message)
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    #20260315
+    '''
+    port = int(os.environ.get('PORT', 5000)) 
+    app.run(host='0.0.0.0', port=port) 
+    '''
+    port = int(os.environ.get('PORT', 10000))
+    # 加入 threaded=True 可以讓 Flask 同時處理多個請求
+    app.run(host='0.0.0.0', port=port, threaded=True)
