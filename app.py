@@ -99,7 +99,6 @@ def GPT_response(question):
     
     #new added 0315
     try:
-        # 定義一個遞迴函數，不管幾層 list 都能把數字掏出來
         def flatten(item):
             res = []
             if isinstance(item, list):
@@ -109,17 +108,19 @@ def GPT_response(question):
                 res.append(item)
             return res
 
-        # 1. 取得攤平後的結果
         flat_list = flatten(output)
         
-        # 2. 轉換成 float 格式（這時裡面保證不是 list 了）
-        embedding_vector = [float(x) for x in flat_list]
+        # 強制只取前 512 個元素，並轉換為 float
+        embedding_vector = [float(x) for x in flat_list[:512]]
         
-        print(f"✅ 解析成功！維度為: {len(embedding_vector)}")
+        print(f"✅ 強制校正成功！原始維度: {len(flat_list)} -> 現已修正為: {len(embedding_vector)}")
         
+        # 額外的保險：如果模型吐出來的東西不到 512 維，補 0 (通常不會發生，但防呆)
+        if len(embedding_vector) < 512:
+            embedding_vector.extend([0.0] * (512 - len(embedding_vector)))
+
     except Exception as e:
         print(f"解析失敗，原因: {e}")
-        print(f"原始 output 內容方便你 Debug: {output}")
         return "向量解析失敗"
         
         
