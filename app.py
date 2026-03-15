@@ -6,13 +6,13 @@ from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import *
 from linebot.exceptions import LineBotApiError
 from linebot.models import TextSendMessage
-print("line東西完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
+print("line東西完成")
 
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 import google.generativeai as genai
 
-print("非內建import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
+print("非內建import完成")
 
 ##################################
 
@@ -37,7 +37,7 @@ import pandas as pd
 import os
 import requests
 #======python的函數庫==========
-print("import 完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
+print("import完成")
 
 uri = "mongodb+srv://h34106054:Alice0813@test0819.46rp0.mongodb.net/?retryWrites=true&w=majority&appName=test0819"
 client = MongoClient(uri, server_api=ServerApi('1'))
@@ -73,17 +73,12 @@ def query(payload):
 
 ################################################################################
 
-print("感覺可以開始接收回應嘞yaaaaaaaaaaaaaaaaaaaaaaaaa")
+print("感覺可以開始接收回應嘞")
 check_memory_usage()
 
 def GPT_response(question):
-    print("已接收到訊息yaaaaaaaaaaaaaaaaaaaaaaaaa")
-    
-    #############
-    
+    print("已接收到訊息")
     texts = [question]
-    
-    # 尝试
     max_retries = 5
     retries = 0
     output = None
@@ -100,6 +95,32 @@ def GPT_response(question):
         print(f"API 返回的输出不正确: {output}")
         return "因為剛啟動模型載入較久，請重新輸入問題喔!"
     
+    #new added 0315
+    try:
+        # 1. 取得原始輸出
+        raw_vector = output
+        
+        # 2. 強制解析為單層 List
+        # 如果 output 是 [[...]]，取第一個元素
+        if isinstance(raw_vector, list) and len(raw_vector) > 0:
+            if isinstance(raw_vector[0], list):
+                embedding_vector = raw_vector[0]
+            else:
+                embedding_vector = raw_vector
+        else:
+            print(f"無法解析的向量格式: {raw_vector}")
+            return "向量格式錯誤"
+
+        # 3. 額外檢查：確保裡面的元素是浮點數，不是字串或其他東西
+        embedding_vector = [float(x) for x in embedding_vector]
+        print(f"成功取得向量，維度為: {len(embedding_vector)}")
+        
+    except Exception as e:
+        print(f"處理向量時發生錯誤: {e}")
+        return "處理向量失敗"
+        
+    #暫時刪除0315
+    '''
     try:
         embedding_vector = output[0][0][0]
         #print(embedding_vector)
@@ -107,19 +128,9 @@ def GPT_response(question):
     except (KeyError, IndexError) as e:
         print(f"解析嵌入向量时出错: {e}, 输出内容: {output}")
         return "获取嵌入向量时出错，请稍后再试。"
-    
-    
-    
-    '''
-    output = query({"inputs": texts,})
-    #print("API Response:", output)
-    embedding_vector = output[0][0][0]
-    #print(embedding_vector)
     '''
 
-
-    
-    print("嵌入完yaaaaaaaaaaaaaaaaaaaaaaaaa")
+    print("嵌入完")
     check_memory_usage()
     pipeline = [
         {
@@ -130,48 +141,34 @@ def GPT_response(question):
                 "numCandidates": 5,  # 设置候选项数量
                 "limit": 1  # 设置结果限制
             }}]
-    print("pipeline完yaaaaaaaaaaaaaaaaaaaaaaaaa")
+    print("pipeline完")
     check_memory_usage()
     try:
         results = list(collection.aggregate(pipeline))
-        print("collection完yaaaaaaaaaaaaaaaaaaaaaaaaa")
+        print("collection完")
         check_memory_usage()
     except Exception as e:
         print(f"An error occurred: {e}")
         ErrorMessage="我不太清楚，An error occurred."
         return ErrorMessage
-    print("有收到訊息並查詢完yaaaaaaaaaaaaaaaaaaaaaaaaa")
+    print("有收到訊息並查詢完")
     
     # 提取 detail 部分
     for doc in results:
         text = doc.get('text', '')
-        '''
-        # 找到 detail 的起始位置
-        start_index = text.find('detail: ')
-        if start_index != -1:
-            # 提取 detail 部分
-            detail = text[start_index + len('detail: '):]
-            # 找到详细信息的结束位置（通常是下一行的开始位置）
-            end_index = detail.find('\n')
-            if end_index != -1:
-                detail = detail[:end_index].strip()
-            #print(f"Detail: {detail}")
-        else:
-            print("Detail not found")
-        '''
         detail = text.strip()
         print(f"Detail: {detail}")
-    print("提取提示細節完成yaaaaaaaaaaaaaaaaaaaaaaaaa")
+    print("提取提示細節完成")
         
 
     ##############
     prompt = f"查詢: {question}\n回答提示: {detail}\n你是協助回答問題的助手，請根據以上信息使用繁體中文\"活潑親切\"的回答。(適當加一些EMOJI)"
-    print("準備丟入LLMyaaaaaaaaaaaaaaaaaaaaaaaaa")
+    print("準備丟入LLM")
     response = model.generate_content(prompt)
     
     #return response.text
     check_memory_usage()
-    print("要印出了yaaaaaaaaaaaaaaaaaaaaaaaaa")
+    print("要印出了")
     print(prompt)
     #print(response)
     return response.text
@@ -204,21 +201,7 @@ def handle_message(event):
     processed_events.add(event.message.id)
     msg = event.message.text
     user_id = event.source.user_id   # 获取用户的 user_id
-    '''
-    try:
-        GPT_answer = GPT_response(msg)
-        print(GPT_answer)
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(GPT_answer))
-    except:
-        print(traceback.format_exc())
-        #line_bot_api.reply_message(event.reply_token, TextSendMessage('系統正在忙碌幫您找資料中，請耐心等待喔'))
-        #print(traceback.format_exc())
-        
-        #GPT_answer = None  
-
-        #line_bot_api.reply_message(event.reply_token, TextSendMessage('已啟動 請重新輸入'))
-        line_bot_api.push_message(user_id, TextSendMessage(text="系统忙碌，请稍后再试。"))
-    '''
+    
     try:
         GPT_answer = GPT_response(msg)
         print(GPT_answer)
