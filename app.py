@@ -44,18 +44,8 @@ client = MongoClient(uri, server_api=ServerApi('1'))
 dbName = "linebot"
 collectionName = "0819-small"
 collection = client[dbName][collectionName]
-#20260315暫刪
-'''
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
-'''
+
 app = Flask(__name__)
-#static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-
-
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 ######################################################################
@@ -75,7 +65,7 @@ def query(payload):
 
 ################################################################################
 
-print("感覺可以開始接收回應嘞")
+print("可以開始接收回應")
 check_memory_usage()
 
 def GPT_response(question):
@@ -97,7 +87,6 @@ def GPT_response(question):
         print(f"API 返回的输出不正确: {output}")
         return "因為剛啟動模型載入較久，請重新輸入問題喔!"
     
-    #new added 0315
     try:
         def flatten(item):
             res = []
@@ -122,18 +111,6 @@ def GPT_response(question):
     except Exception as e:
         print(f"解析失敗，原因: {e}")
         return "向量解析失敗"
-        
-        
-    #暫時刪除0315
-    '''
-    try:
-        embedding_vector = output[0][0][0]
-        #print(embedding_vector)
-        check_memory_usage()
-    except (KeyError, IndexError) as e:
-        print(f"解析嵌入向量时出错: {e}, 输出内容: {output}")
-        return "获取嵌入向量时出错，请稍后再试。"
-    '''
 
     print("嵌入完")
     check_memory_usage()
@@ -167,15 +144,14 @@ def GPT_response(question):
         
 
     ##############
-    prompt = f"查詢: {question}\n回答提示: {detail}\n你是協助回答問題的助手，請根據以上信息使用繁體中文\"活潑親切\"的回答。(適當加一些EMOJI)"
+    prompt = f"查詢: {question}\n回答提示: {detail}\n你是協助回答問題的助手，請根據以上信息使用繁體中文\"活潑親切\"的回答。(適當加一些EMOJI，但是要記得把markdown符號拿掉)。不過先看查詢是否與回答一致，如果文不對題請捨棄回答提示以查詢的內容去做回應"
     print("準備丟入LLM")
     response = model.generate_content(prompt)
     
     #return response.text
     check_memory_usage()
-    print("要印出了")
+    print("印prompt")
     print(prompt)
-    #print(response)
     return response.text
 
 
